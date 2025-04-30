@@ -11,9 +11,9 @@ import com.lucas.picpay.models.Transaction;
 public class DtoTransaction {
 	
 	private long id;
-	private long payer_id;
-	private long payee_id;
-	private BigDecimal dinheiro;
+	private long p_id1;
+	private long p_id2;
+	private BigDecimal di;
 	
 	public DtoTransaction()
 	{
@@ -23,8 +23,8 @@ public class DtoTransaction {
 	public DtoTransaction(Transaction transfer) 
 	{
 		this.id = transfer.getId();
-		this.payer_id = transfer.getId_payer();
-		this.payee_id = transfer.getId_payee();
-		this.dinheiro = transfer.getDinheiro();
+		this.p_id2 = transfer.getP_id();
+		this.p_id2 = transfer.getP_id2();
+		this.di = transfer.getDi();
 	}
 }

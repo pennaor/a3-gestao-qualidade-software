@@ -12,31 +12,32 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Id;
 
-@Entity
-@Table(name = "tb_transactions")
-@Setter
-@Getter
+@Entity @Table(name = "tb_transactions")
+@Setter @Getter
 public class Transaction
 {
-	@Id
-	@GeneratedValue( strategy = GenerationType.IDENTITY)
-	private long id;
-	private long id_payer;
-	private long id_payee;
-	private BigDecimal dinheiro;
-	@ManyToOne
-	@JoinColumn( name = "userId_fk")
-	private Usuario user;
-	
-	public Transaction()
-	{
-		
-	}
-	
-	public Transaction (DtoTransaction transfer)
-	{
-		this.id_payer = transfer.getPayer_id();
-		this.id_payee = transfer.getPayee_id();
-		this.dinheiro = transfer.getDinheiro();
-	}
+@Id
+@GeneratedValue( strategy = GenerationType.IDENTITY)
+private long id;
+
+private long p_id;
+
+private long p_id2;
+
+private BigDecimal di;
+
+@ManyToOne
+@JoinColumn( name = "userId_fk")
+private Usuario u;
+
+public Transaction()
+{
+}
+
+public Transaction (DtoTransaction t)
+{
+this.id = t.getId();
+this.p_id = t.getP_id1();
+this.p_id2 = t.getP_id2();
+}
 }
