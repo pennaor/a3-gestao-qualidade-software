@@ -34,7 +34,7 @@ public class Usuario
 	private String senha;
 	private UserType usrtype;
 	private BigDecimal dinheiro;
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "usuario")
 	private List<Transaction> transactions;
 	
 	
@@ -43,8 +43,9 @@ public class Usuario
 		
 	}
 	
-	public Usuario(String nome,String cpf, String email, String senha, BigDecimal dinheiro)
+	public Usuario(Long id,String nome,String cpf, String email, String senha, BigDecimal dinheiro)
 	{
+		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.email = email;

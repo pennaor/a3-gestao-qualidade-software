@@ -13,62 +13,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.lucas.picpay.dto.UsuarioDto;
 import com.lucas.picpay.models.Usuario;
 import com.lucas.picpay.repository.UsuarioRepository;
-import com.lucas.picpay.Exception.Nfound;
+import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
 import com.lucas.picpay.dto.DtoException;
+import com.lucas.picpay.service.UserService;
 
 
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/v1")
 public class UserController {
 	
 	@Autowired
-	private UsuarioService usrService;
+	private UserService usuarioService;
 	
-	@PostMapping
-	public ResponseEntity<UsuarioDto> saveUser(@RequestBody UsuarioDto userdto)
+	
+	@PostMapping(value ="/user")
+	public ResponseEntity<?> CriarUsuarior(@RequestBody UsuarioDto dtoUsuario)
 	{
+		UsuarioDto response = usuarioService.CriarUsuario(dtoUsuario);
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(usrService.saveUser(userdto));
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> getUser(@PathVariable long id)
+	@GetMapping(value = "/user/{id}")
+	public ResponseEntity<?> retonarUsuario (@PathVariable Long id)
 	{
-		try {
-		return ResponseEntity.status(HttpStatus.OK).body(usrService.getUser(id));
+		try
+		{
+			UsuarioDto reposta = usuarioService.retornarUsuario(id);
+			
+		    return ResponseEntity.status(HttpStatus.OK).body(reposta);
 		}
 		
-		catch (Nfound e)
+		catch(RecursoNaoEncontradoException e)
 		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(),e.getClass().getName().split("\\.")[4]));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(),e.getClass().getSimpleName()));
 		}
 	}
-	
-	@Service
-	public class UsuarioService
-	{
-		
-		@Autowired
-		private UsuarioRepository usrRepo;
-		
-		public UsuarioDto saveUser(UsuarioDto usr)
-		{
-			Usuario usrmodel = new Usuario(usr);
-			
-			Usuario resp = usrRepo.save(usrmodel);
-			
-			return new UsuarioDto(resp);
-			
-		}
-		
-		public UsuarioDto getUser(Long id)
-		{
-			
-			Usuario resp = usrRepo.findById(id).orElseThrow(() -> new Nfound("Usuario não encontrado!!!"));
-			
-			return new UsuarioDto(resp);
-		}
-	}
-	
 }

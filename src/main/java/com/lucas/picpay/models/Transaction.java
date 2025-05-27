@@ -4,40 +4,43 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import com.lucas.picpay.dto.DtoTransaction;
-import java.math.BigDecimal;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Id;
 
-@Entity @Table(name = "tb_transactions")
-@Setter @Getter
-public class Transaction
-{
-@Id
-@GeneratedValue( strategy = GenerationType.IDENTITY)
-private long id;
+import lombok.Getter;
+import lombok.Setter;
 
-private long p_id;
+import com.lucas.picpay.dto.DtoTransaction;
 
-private long p_id2;
+import java.math.BigDecimal;
 
-private BigDecimal di;
+@Entity
+@Table(name = "tb_transactions")
+@Setter
+@Getter
+public class Transaction {
 
-@ManyToOne
-@JoinColumn( name = "userId_fk")
-private Usuario u;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-public Transaction()
-{
-}
+    private long usuarioTransferencia_id;
 
-public Transaction (DtoTransaction t)
-{
-this.id = t.getId();
-this.p_id = t.getP_id1();
-this.p_id2 = t.getP_id2();
-}
+    private long usuarioReceber_id;
+
+    private BigDecimal dinheiro;
+
+    @ManyToOne
+    @JoinColumn(name = "userId_fk")
+    private Usuario usuario;
+
+    public Transaction() {
+    }
+
+    public Transaction(DtoTransaction dtoTransferencia) {
+        this.id = dtoTransferencia.getId();
+        this.usuarioTransferencia_id = dtoTransferencia.getUsuarioTransferencia_id();
+        this.usuarioReceber_id = dtoTransferencia.getUsuarioRecebedor_id();
+    }
 }
