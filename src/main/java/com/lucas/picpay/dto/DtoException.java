@@ -8,18 +8,18 @@ import lombok.Setter;
 @Setter
 public class DtoException {
 	
-	private String msg;
-	private String typeError;
+	private String mensagem;
+	private String tipoDeErro;
 	
 	public DtoException()
 	{
 		
 	}
 	
-	public DtoException(String msg, String typeError)
+	public DtoException(String mensagem, String tipoDeErro)
 	{
-		this.msg = msg;
-		this.typeError = typeError;
+		this.mensagem = mensagem;
+		this.tipoDeErro = tipoDeErro;
 	}
 	
 }

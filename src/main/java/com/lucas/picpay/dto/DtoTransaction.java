@@ -11,20 +11,20 @@ import com.lucas.picpay.models.Transaction;
 public class DtoTransaction {
 	
 	private long id;
-	private long p_id1;
-	private long p_id2;
-	private BigDecimal di;
+	private long usuarioTransferencia_id;
+	private long usuarioRecebedor_id;
+	private BigDecimal dinheiro;
 	
 	public DtoTransaction()
 	{
 		
 	}
 	
-	public DtoTransaction(Transaction transfer) 
+	public DtoTransaction(Transaction transferencia) 
 	{
-		this.id = transfer.getId();
-		this.p_id2 = transfer.getP_id();
-		this.p_id2 = transfer.getP_id2();
-		this.di = transfer.getDi();
+		this.id = transferencia.getId();
+		this.usuarioTransferencia_id = transferencia.getUsuarioTransferencia_id();
+		this.usuarioRecebedor_id = transferencia.getUsuarioReceber_id();
+		this.dinheiro = transferencia.getDinheiro();
 	}
 }

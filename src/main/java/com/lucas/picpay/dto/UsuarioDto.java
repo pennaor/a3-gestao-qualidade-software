@@ -18,15 +18,15 @@ public class UsuarioDto
 	private UserType usrtype;
 	private BigDecimal dinheiro;
 	
-	public UsuarioDto (Usuario usr)
+	public UsuarioDto (Usuario usuario)
 	{
-		this.id = usr.getId();
-		this.nome = usr.getNome();
-		this.cpf = usr.getCpf();
-		this.email = usr.getEmail();
-		this.senha = usr.getSenha();
-		this.usrtype = usr.getUsrtype();
-		this.dinheiro = usr.getDinheiro();
+		this.id = usuario.getId();
+		this.nome = usuario.getNome();
+		this.cpf = usuario.getCpf();
+		this.email = usuario.getEmail();
+		this.senha = usuario.getSenha();
+		this.usrtype = usuario.getUsrtype();
+		this.dinheiro = usuario.getDinheiro();
 		
 		
 	}

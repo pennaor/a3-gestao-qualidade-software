@@ -10,6 +10,7 @@ import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,118 +25,41 @@ import com.lucas.picpay.models.UserType;
 import com.lucas.picpay.models.Usuario;
 import com.lucas.picpay.repository.TransactionRepository;
 import com.lucas.picpay.repository.UsuarioRepository;
-import com.lucas.picpay.Exception.Nfound;
-import com.lucas.picpay.Exception.Not;
-import com.lucas.picpay.Exception.Break;
+import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
+import com.lucas.picpay.Exception.TransacaoNaoAutorizadaException;
+import com.lucas.picpay.Exception.RegraDeNegocioInvalidaException;
+import com.lucas.picpay.service.TransactionService;
 
 @RestController
-@RequestMapping(value = "/api/transaction")
-public class TransactionController {
-	
-	
+@RequestMapping(value = "/api/v1/transaction")
+public class TransactionController
+{
 	@Autowired
-	private TransactionService transferService;
-	
+	private TransactionService serviceTransacao;
 	@PostMapping
-	public ResponseEntity<?> getIdTransaction(@RequestBody DtoTransaction transfer)
+	public ResponseEntity<?> criarTransacao(@RequestBody DtoTransaction dtoTransferencia)
 	{
 		
 		try
 		{
-		return ResponseEntity.status(HttpStatus.CREATED).body(transferService.CreaterTransaction(transfer));
+			DtoTransaction dtoTransferenciaResponse = serviceTransacao.transferirDinheiro(dtoTransferencia);
+			return ResponseEntity.status(HttpStatus.CREATED ).body(dtoTransferenciaResponse);
 		}
-		
-		catch(Nfound e)
-		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(),e.getClass().getName().split("\\.")[4]));
-}
-
-catch (Break e)
-{
-	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException(e.getMessage(),e.getClass().getName().split("\\.")[4]));
-}
-
-catch (Not e)
-{
-	return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new DtoException(e.getMessage(),e.getClass().getName().split("\\.")[4]));
-	}
-}
-
-
-@Service
-public class TransactionService
-{
 	
-	@Autowired
-	private UsuarioRepository userRepo;
-	
-	@Autowired
-	private TransactionRepository transfeRepo;
-	
-	
-	public DtoTransaction CreaterTransaction(DtoTransaction transferobj)
-	{
-	
-		Usuario objp1 = userRepo.findById(transferobj.getP_id1()).orElseThrow(() -> new Nfound("Usuario não encontrado"));
-Usuario objp2 = userRepo.findById(transferobj.getP_id2()).orElseThrow(() -> new Nfound("Usuario não encontrado"));
-
-
-
-if (objp1.getUsrtype() == UserType.UL)
-{
-	throw new Break("...");
-}
-
-else
-{
-		if (objp2.getDinheiro().compareTo(transferobj.getDi()) < 0)
-		{
-			throw new Break(".");
-}
-
-else if (!valT())
-{
-	throw new Not("...");
-			}
-			
-		objp1.setDinheiro(objp1.getDinheiro().subtract(transferobj.getDi()));
-		objp2.setDinheiro(objp2.getDinheiro().add(transferobj.getDi()));
-
-		
-		userRepo.save(objp1);
-		userRepo.save(objp2);
+		catch (RecursoNaoEncontradoException e) 
+        {
+        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
+        } 
+        
+        catch (RegraDeNegocioInvalidaException e)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
+        }
+        
+        catch (TransacaoNaoAutorizadaException e)
+        {
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
 		
 	}
-	
-	return  new DtoTransaction(transfeRepo.save( new Transaction(transferobj)));
 }
-
-public Boolean valT()
-{
-	
-	
-	try
-	{
-	ResponseEntity<Map> r = new RestTemplate().getForEntity("https://util.devi.tools/api/v2/authorize",Map.class);
-
-if (!(r.getStatusCode() == HttpStatus.OK))
-{
-	return false;
-}
-
-Map<String,Object> a = (Map<String,Object>) r.getBody().get("data");
-
-return (Boolean) a.get("authorization");
-	
-			}
-			
-			catch(Exception e)
-			{
-				return false;
-			}
-			
-			
-		}
-	}
-	
 }
