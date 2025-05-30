@@ -12,19 +12,19 @@ public class GerenciamentoDeExceptions {
 	@ExceptionHandler(RecursoNaoEncontradoException.class)
 	public ResponseEntity<DtoException> handleRecursoNaoEncontrado(RecursoNaoEncontradoException e)
 	{
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException("O recurso solicitado não foi encontrado!!!",e.getClass().getSimpleName()));
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException("O recurso solicitado não foi encontrado!",e.getClass().getSimpleName()));
 	}
 	
 	@ExceptionHandler(RegraDeNegocioInvalidaException.class)
 	public ResponseEntity<DtoException> handleRegraDeNegocioInvalida(RegraDeNegocioInvalidaException e)
 	{
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException("O processamento da requisição não foi bem sucedida por não cumprir as exigencias estabelecidas da aplicação",e.getClass().getSimpleName()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException("O processamento da requisição não foi bem-sucedido por não cumprir as exigências estabelecidas pela aplicação.",e.getClass().getSimpleName()));
 	}
 	
 	@ExceptionHandler(TransacaoNaoAutorizadaException.class)
 	public ResponseEntity<DtoException> handleTrasacaoNaoAutorizada(TransacaoNaoAutorizadaException e)
 	{
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException("A transação não cumpriu todos os requisitos estabelecidos no sistema",e.getClass().getSimpleName()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException("A transação não atendeu a todos os requisitos estabelecidos pelo sistema",e.getClass().getSimpleName()));
 	}
 
 }
