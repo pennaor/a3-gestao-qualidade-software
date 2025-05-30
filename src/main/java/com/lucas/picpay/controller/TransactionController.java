@@ -39,27 +39,9 @@ public class TransactionController
 	@PostMapping
 	public ResponseEntity<?> criarTransacao(@RequestBody DtoTransaction dtoTransferencia)
 	{
-		
-		try
-		{
 			DtoTransaction dtoTransferenciaResponse = serviceTransacao.transferirDinheiro(dtoTransferencia);
 			return ResponseEntity.status(HttpStatus.CREATED ).body(dtoTransferenciaResponse);
-		}
-	
-		catch (RecursoNaoEncontradoException e) 
-        {
-        	return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
-        } 
-        
-        catch (RegraDeNegocioInvalidaException e)
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
-        }
-        
-        catch (TransacaoNaoAutorizadaException e)
-        {
-            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new DtoException(e.getMessage(), e.getClass().getSimpleName()));
 		
-	}
+	
 }
 }
