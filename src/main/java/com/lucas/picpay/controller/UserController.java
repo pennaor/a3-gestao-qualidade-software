@@ -38,16 +38,8 @@ public class UserController {
 	@GetMapping(value = "/user/{id}")
 	public ResponseEntity<?> retonarUsuario (@PathVariable Long id)
 	{
-		try
-		{
 			UsuarioDto reposta = usuarioService.retornarUsuario(id);
 			
 		    return ResponseEntity.status(HttpStatus.OK).body(reposta);
-		}
-		
-		catch(RecursoNaoEncontradoException e)
-		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DtoException(e.getMessage(),e.getClass().getSimpleName()));
-		}
 	}
 }
