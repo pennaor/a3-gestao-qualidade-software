@@ -2,9 +2,9 @@ package com.lucas.picpay.controller;
 
 import com.lucas.picpay.dto.DtoException;
 import com.lucas.picpay.dto.DtoTransaction;
-import com.lucas.picpay.exception.RecursoNaoEncontradoException;
-import com.lucas.picpay.exception.RegraDeNegocioInvalidaException;
-import com.lucas.picpay.exception.TransacaoNaoAutorizadaException;
+import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
+import com.lucas.picpay.Exception.RegraDeNegocioInvalidaException;
+import com.lucas.picpay.Exception.TransacaoNaoAutorizadaException;
 import com.lucas.picpay.service.TransactionService;
 
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
-package com.lucas.picpay;
+package com.lucas.picpay.controller;
 
 import com.lucas.picpay.controller.UserController;
 import com.lucas.picpay.dto.DtoException;
 import com.lucas.picpay.dto.UsuarioDto;
-import com.lucas.picpay.exception.RecursoNaoEncontradoException;
+import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
 import com.lucas.picpay.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
