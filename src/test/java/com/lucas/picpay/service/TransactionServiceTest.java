@@ -39,10 +39,10 @@ public class TransactionServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // Caso feliz: transferência válida
+    
     @Test
     public void testTransferirDinheiro_Sucesso() {
-        // Usuários simulados
+       
         Usuario usuarioTransferir = new Usuario();
         usuarioTransferir.setId(1L);
         usuarioTransferir.setUsrtype(UserType.USUARIO_COMUM);
@@ -52,18 +52,18 @@ public class TransactionServiceTest {
         usuarioReceber.setId(2L);
         usuarioReceber.setDinheiro(new BigDecimal("50.00"));
 
-        // DTO de transferência
+      
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
-        dto.setUsuarioRecebedor_id(2L);
+        dto.setUsuarioTransferenciaId(1L);
+        dto.setUsuarioRecebedorId(2L);
         dto.setDinheiro(new BigDecimal("30.00"));
 
-        // Comportamento esperado dos mocks
+        
         when(usuarioRepo.findById(1L)).thenReturn(Optional.of(usuarioTransferir));
         when(usuarioRepo.findById(2L)).thenReturn(Optional.of(usuarioReceber));
         when(authTransacaoService.validacaoTransicao()).thenReturn(true);
 
-        // Salvar deve retornar a transação com id preenchido
+       
         when(transactionRepo.save(any(Transaction.class))).thenAnswer(invocation -> {
             Transaction t = invocation.getArgument(0);
             t.setId(10L);
@@ -72,23 +72,23 @@ public class TransactionServiceTest {
 
         DtoTransaction result = transactionService.transferirDinheiro(dto);
 
-        // Verificações básicas
+        
         assertNotNull(result);
         assertEquals(10L, result.getId());
         assertEquals(new BigDecimal("70.00"), usuarioTransferir.getDinheiro()); // 100 - 30
         assertEquals(new BigDecimal("80.00"), usuarioReceber.getDinheiro());    // 50 + 30
 
-        // Verificar que salvou usuários e transação
+      
         verify(usuarioRepo, times(1)).save(usuarioTransferir);
         verify(usuarioRepo, times(1)).save(usuarioReceber);
         verify(transactionRepo, times(1)).save(any(Transaction.class));
     }
 
-    // Usuário transferidor não encontrado
+    
     @Test
     public void testTransferirDinheiro_UsuarioTransferirNaoEncontrado() {
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
+        dto.setUsuarioTransferenciaId(1L);
 
         when(usuarioRepo.findById(1L)).thenReturn(Optional.empty());
 
@@ -98,12 +98,12 @@ public class TransactionServiceTest {
         assertEquals("Usuário não encontrado", ex.getMessage());
     }
 
-    // Usuário receptor não encontrado
+   
     @Test
     public void testTransferirDinheiro_UsuarioReceptorNaoEncontrado() {
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
-        dto.setUsuarioRecebedor_id(2L);
+        dto.setUsuarioTransferenciaId(1L);
+        dto.setUsuarioRecebedorId(2L);
 
         Usuario usuarioTransferir = new Usuario();
         usuarioTransferir.setId(1L);
@@ -123,8 +123,8 @@ public class TransactionServiceTest {
     @Test
     public void testTransferirDinheiro_UsuarioLojista() {
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
-        dto.setUsuarioRecebedor_id(2L);
+        dto.setUsuarioTransferenciaId(1L);
+        dto.setUsuarioRecebedorId(2L);
         dto.setDinheiro(new BigDecimal("10.00"));
 
         Usuario usuarioTransferir = new Usuario();
@@ -149,8 +149,8 @@ public class TransactionServiceTest {
     @Test
     public void testTransferirDinheiro_SaldoInsuficiente() {
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
-        dto.setUsuarioRecebedor_id(2L);
+        dto.setUsuarioTransferenciaId(1L);
+        dto.setUsuarioRecebedorId(2L);
         dto.setDinheiro(new BigDecimal("150.00")); // maior que saldo do usuário
 
         Usuario usuarioTransferir = new Usuario();
@@ -175,8 +175,8 @@ public class TransactionServiceTest {
     @Test
     public void testTransferirDinheiro_TransacaoNaoAutorizada() {
         DtoTransaction dto = new DtoTransaction();
-        dto.setUsuarioTransferencia_id(1L);
-        dto.setUsuarioRecebedor_id(2L);
+        dto.setUsuarioTransferenciaId(1L);
+        dto.setUsuarioRecebedorId(2L);
         dto.setDinheiro(new BigDecimal("50.00"));
 
         Usuario usuarioTransferir = new Usuario();

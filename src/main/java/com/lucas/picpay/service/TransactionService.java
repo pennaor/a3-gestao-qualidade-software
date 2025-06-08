@@ -35,8 +35,9 @@ public class TransactionService {
 
     public DtoTransaction transferirDinheiro(DtoTransaction dtoTransferencia)
     {
-        	Usuario usuarioTransferir = usuarioRepo.findById(dtoTransferencia.getUsuarioTransferencia_id()).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
-            Usuario usuarioReceptor = usuarioRepo.findById(dtoTransferencia.getUsuarioRecebedor_id()).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+    	
+        	Usuario usuarioTransferir = usuarioRepo.findById(dtoTransferencia.getUsuarioTransferenciaId()).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
+            Usuario usuarioReceptor = usuarioRepo.findById(dtoTransferencia.getUsuarioRecebedorId()).orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
             Transaction transferencia = new Transaction(dtoTransferencia);
 
             if (usuarioTransferir.getUsrtype() == UserType.USUARIO_LOJISTA)

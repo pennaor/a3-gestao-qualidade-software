@@ -11,8 +11,8 @@ import com.lucas.picpay.models.Transaction;
 public class DtoTransaction {
 	
 	private long id;
-	private long usuarioTransferencia_id;
-	private long usuarioRecebedor_id;
+	private long usuarioTransferenciaId;
+	private long usuarioRecebedorId;
 	private BigDecimal dinheiro;
 	
 	public DtoTransaction()
@@ -23,8 +23,8 @@ public class DtoTransaction {
 	public DtoTransaction(Transaction transferencia) 
 	{
 		this.id = transferencia.getId();
-		this.usuarioTransferencia_id = transferencia.getUsuarioTransferencia_id();
-		this.usuarioRecebedor_id = transferencia.getUsuarioReceber_id();
+		this.usuarioTransferenciaId = transferencia.getUsuarioTransferenciaId();
+		this.usuarioRecebedorId = transferencia.getUsuarioReceberId();
 		this.dinheiro = transferencia.getDinheiro();
 	}
 }

@@ -25,9 +25,9 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long usuarioTransferencia_id;
+    private long usuarioTransferenciaId;
 
-    private long usuarioReceber_id;
+    private long usuarioReceberId;
 
     private BigDecimal dinheiro;
 
@@ -40,7 +40,8 @@ public class Transaction {
 
     public Transaction(DtoTransaction dtoTransferencia) {
         this.id = dtoTransferencia.getId();
-        this.usuarioTransferencia_id = dtoTransferencia.getUsuarioTransferencia_id();
-        this.usuarioReceber_id = dtoTransferencia.getUsuarioRecebedor_id();
+        this.usuarioTransferenciaId = dtoTransferencia.getUsuarioTransferenciaId();
+        this.usuarioReceberId = dtoTransferencia.getUsuarioRecebedorId();
+        this.dinheiro  = dtoTransferencia.getDinheiro();
     }
 }

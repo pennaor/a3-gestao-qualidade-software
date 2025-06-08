@@ -3,6 +3,7 @@ package com.lucas.picpay.controller;
 import com.lucas.picpay.controller.UserController;
 import com.lucas.picpay.dto.DtoException;
 import com.lucas.picpay.dto.UsuarioDto;
+import com.lucas.picpay.Exception.GerenciamentoDeExceptions;
 import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
 import com.lucas.picpay.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,14 +59,14 @@ public class UserControllerTest {
 
     @Test
     void testRetornarUsuarioNotFound() {
-        Long id = 1L;
-        when(usuarioService.retornarUsuario(id)).thenThrow(new RecursoNaoEncontradoException("Usuário não encontrado"));
-
-        ResponseEntity<?> response = userController.retonarUsuario(id);
-
+    	
+    	RecursoNaoEncontradoException objetoException = new RecursoNaoEncontradoException("O recurso solicitado não foi encontrado!");
+    	GerenciamentoDeExceptions objetoGerenciarExceptions = new GerenciamentoDeExceptions();
+    	ResponseEntity<DtoException> response = objetoGerenciarExceptions.handleRecursoNaoEncontrado(objetoException);
+    	
+    	
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        DtoException dto = (DtoException) response.getBody();
-        assertEquals("Usuário não encontrado", dto.getMensagem());
-        assertEquals("RecursoNaoEncontradoException", dto.getTipoDeErro());
+        assertEquals("O recurso solicitado não foi encontrado!", response.getBody().getMensagem());
+        assertEquals("RecursoNaoEncontradoException", response.getBody().getTipoDeErro());
     }
 }

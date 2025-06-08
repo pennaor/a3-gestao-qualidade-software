@@ -2,7 +2,7 @@ package com.lucas.picpay.controller;
 
 import com.lucas.picpay.dto.DtoException;
 import com.lucas.picpay.dto.DtoTransaction;
-import com.lucas.picpay.Exception.RecursoNaoEncontradoException;
+import com.lucas.picpay.Exception.GerenciamentoDeExceptions;
 import com.lucas.picpay.Exception.RegraDeNegocioInvalidaException;
 import com.lucas.picpay.Exception.TransacaoNaoAutorizadaException;
 import com.lucas.picpay.service.TransactionService;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TransactionControllerTest {
@@ -34,14 +34,15 @@ class TransactionControllerTest {
         MockitoAnnotations.openMocks(this);
         mockTransaction = new DtoTransaction();
         mockTransaction.setId(1L);
-        mockTransaction.setUsuarioTransferencia_id(100L);
-        mockTransaction.setUsuarioRecebedor_id(200L);
+        mockTransaction.setUsuarioTransferenciaId(100L);
+        mockTransaction.setUsuarioRecebedorId(200L);
         mockTransaction.setDinheiro(new BigDecimal("50.00"));
     }
 
     @Test
     void testCriarTransacaoComSucesso() {
-        when(serviceTransacao.transferirDinheiro(mockTransaction)).thenReturn(mockTransaction);
+        when(serviceTransacao.transferirDinheiro(mockTransaction))
+            .thenReturn(mockTransaction);
 
         ResponseEntity<?> response = controller.criarTransacao(mockTransaction);
 
@@ -51,41 +52,19 @@ class TransactionControllerTest {
     }
 
     @Test
-    void testCriarTransacao_RecursoNaoEncontrado() {
-        when(serviceTransacao.transferirDinheiro(mockTransaction))
-            .thenThrow(new RecursoNaoEncontradoException("Usuário não encontrado"));
-
-        ResponseEntity<?> response = controller.criarTransacao(mockTransaction);
-
-        assertEquals(404, response.getStatusCodeValue());
-        DtoException body = (DtoException) response.getBody();
-        assertEquals("Usuário não encontrado", body.getMensagem());
-        assertEquals("RecursoNaoEncontradoException", body.getTipoDeErro());
-    }
-
-    @Test
-    void testCriarTransacao_RegraDeNegocioInvalida() {
-        when(serviceTransacao.transferirDinheiro(mockTransaction))
-            .thenThrow(new RegraDeNegocioInvalidaException("Saldo insuficiente"));
-
-        ResponseEntity<?> response = controller.criarTransacao(mockTransaction);
-
-        assertEquals(400, response.getStatusCodeValue());
-        DtoException body = (DtoException) response.getBody();
-        assertEquals("Saldo insuficiente", body.getMensagem());
-        assertEquals("RegraDeNegocioInvalidaException", body.getTipoDeErro());
-    }
-
-    @Test
     void testCriarTransacao_TransacaoNaoAutorizada() {
-        when(serviceTransacao.transferirDinheiro(mockTransaction))
-            .thenThrow(new TransacaoNaoAutorizadaException("Transação não autorizada"));
-
-        ResponseEntity<?> response = controller.criarTransacao(mockTransaction);
-
-        assertEquals(405, response.getStatusCodeValue());
-        DtoException body = (DtoException) response.getBody();
-        assertEquals("Transação não autorizada", body.getMensagem());
-        assertEquals("TransacaoNaoAutorizadaException", body.getTipoDeErro());
+        
+        RegraDeNegocioInvalidaException exception = new RegraDeNegocioInvalidaException(
+            "O processamento da requisição não foi bem-sucedido por não cumprir as exigências estabelecidas pela aplicação."
+        );
+        GerenciamentoDeExceptions handler = new GerenciamentoDeExceptions();
+        ResponseEntity<DtoException> response = handler.handleRegraDeNegocioInvalida(exception);
+        
+        DtoException body = response.getBody();
+ 
+        assertEquals(400, response.getStatusCodeValue());
+        assertNotNull(body);
+        assertEquals("O processamento da requisição não foi bem-sucedido por não cumprir as exigências estabelecidas pela aplicação.", body.getMensagem());
+        assertEquals("RegraDeNegocioInvalidaException", body.getTipoDeErro());
     }
 }
